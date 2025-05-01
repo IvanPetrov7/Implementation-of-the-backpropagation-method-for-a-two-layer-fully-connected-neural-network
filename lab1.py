@@ -4,6 +4,7 @@ import sys
 import cv2
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
+from tensorflow.keras.datasets import mnist
 
 # -----------------------------
 # Гиперпараметры
@@ -256,8 +257,13 @@ def predict_image(image_path, weights_file):
     img_flat = img.flatten().reshape(1, -1)
 
     A3, _ = forward(img_flat, W1, b1, W2, b2, W3, b3)
+
+    predicted_class = np.argmax(A3, axis=1)[0]
+    confidence = A3[0, predicted_class]
+
     prediction = np.argmax(A3, axis=1)[0]
     print(f"Предсказание: Цифра — {prediction}")
+    print(f"Confidence: {confidence * 100:.2f}%")
 
 # -----------------------------
 # Тестирование на всём датасете
@@ -290,6 +296,45 @@ def test_dataset(test_dir, weights_file):
     print(classification_report(true_test, preds_test))
 
 # -----------------------------
+# Функция генерации датасета
+# -----------------------------
+def generate_mnist_dataset(output_dir='dataset', img_format='.png', train_size=60000, test_size=10000):
+    # Создаем основные папки
+    train_dir = os.path.join(output_dir, 'training')
+    test_dir = os.path.join(output_dir, 'test')
+    os.makedirs(train_dir, exist_ok=True)
+    os.makedirs(test_dir, exist_ok=True)
+
+    # Загрузка данных MNIST
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+    # Ограничиваем размеры выборок, если нужно
+    x_train, y_train = x_train[:train_size], y_train[:train_size]
+    x_test, y_test = x_test[:test_size], y_test[:test_size]
+
+    # Внутренняя функция сохранения набора (train или test)
+    def save_dataset(images, labels, split_dir):
+        for i in range(10):  # Для каждой цифры от 0 до 9
+            class_dir = os.path.join(split_dir, str(i))
+            os.makedirs(class_dir, exist_ok=True)
+
+        for idx, (img, label) in enumerate(zip(images, labels)):
+            class_folder = str(label)
+            filename = f"{idx:05d}{img_format}"
+            path = os.path.join(split_dir, class_folder, filename)
+
+            # Сохраняем изображение
+            cv2.imwrite(path, img)
+
+    print("Сохранение обучающего набора...")
+    save_dataset(x_train, y_train, train_dir)
+
+    print("Сохранение тестового набора...")
+    save_dataset(x_test, y_test, test_dir)
+
+    print(f"\nДатасет успешно создан в папке: {os.path.abspath(output_dir)}")
+
+# -----------------------------
 # Точка входа программы
 # -----------------------------
 def main():
@@ -302,45 +347,59 @@ def main():
 
     mode = sys.argv[1]
 
-    if mode == "train":
-        if len(sys.argv) != 6:
-            print("Использование: python script.py train <train_dir> <test_dir> <epochs> <lr>")
-            sys.exit(1)
+    import argparse
 
-        train_dir = sys.argv[2]
-        test_dir = sys.argv[3]
-        total_epochs = int(sys.argv[4])
+    if mode == "train":
+        parser = argparse.ArgumentParser(description="Обучение нейросети")
+        parser.add_argument('--train_dir', type=str, required=True, help='Директория с обучающими данными')
+        parser.add_argument('--test_dir', type=str, required=True, help='Директория с тестовыми данными')
+        parser.add_argument('--epochs', type=int, default=10, help='Количество эпох обучения')
+        parser.add_argument('--lr', type=float, default=0.01, help='Скорость обучения (learning rate)')
+        args = parser.parse_args(sys.argv[2:])
+
         global learning_rate
-        learning_rate = float(sys.argv[5])
+        learning_rate = args.lr
 
         print("Загрузка тренировочных данных...")
-        train_data, train_labels = read_images(train_dir)
+        train_data, train_labels = read_images(args.train_dir)
         print("Загрузка тестовых данных...")
-        test_data, test_labels = read_images(test_dir)
+        test_data, test_labels = read_images(args.test_dir)
 
         print("Начало обучения...")
-        train(train_data, train_labels, test_data, test_labels, total_epochs)
+        train(train_data, train_labels, test_data, test_labels, args.epochs)
 
     elif mode == "test":
-        if len(sys.argv) != 4:
-            print("Использование: python script.py test <test_dir> <weights_file>")
-            sys.exit(1)
-
-        test_dir = sys.argv[2]
-        weights_file = sys.argv[3]
-        test_dataset(test_dir, weights_file)
+        parser = argparse.ArgumentParser(description="Тестирование модели на наборе данных")
+        parser.add_argument('--test_dir', type=str, required=True, help='Директория с тестовыми данными')
+        parser.add_argument('--weights_file', type=str, required=True, help='Файл весов модели (.npz)')
+        args = parser.parse_args(sys.argv[2:])
+        test_dataset(args.test_dir, args.weights_file)
 
     elif mode == "predict":
-        if len(sys.argv) != 4:
-            print("Использование: python script.py predict <image_path> <weights_file>")
-            sys.exit(1)
+        parser = argparse.ArgumentParser(description="Предсказание цифры на одном изображении")
+        parser.add_argument('--image_path', type=str, required=True, help='Путь к изображению')
+        parser.add_argument('--weights_file', type=str, required=True, help='Файл весов модели (.npz)')
+        args = parser.parse_args(sys.argv[2:])
+        predict_image(args.image_path, args.weights_file)
 
-        image_path = sys.argv[2]
-        weights_file = sys.argv[3]
-        predict_image(image_path, weights_file)
+    elif mode == "generate":
+        parser = argparse.ArgumentParser(description="Генерация датасета MNIST")
+        parser.add_argument('--output_dir', type=str, default='dataset', help='Путь к выходной директории')
+        parser.add_argument('--format', type=str, default='.png', choices=['.png', '.jpg'], help='Формат изображений')
+        parser.add_argument('--train_size', type=int, default=60000, help='Количество тренировочных образцов')
+        parser.add_argument('--test_size', type=int, default=10000, help='Количество тестовых образцов')
+
+        args = parser.parse_args(sys.argv[2:])
+        generate_mnist_dataset(
+            output_dir=args.output_dir,
+            img_format=args.format,
+            train_size=args.train_size,
+            test_size=args.test_size
+        )
 
     else:
-        print("Режим не распознан. Используйте 'train', 'test' или 'predict'.")
+        print("Неизвестный режим:", mode)
+        print("Поддерживаемые режимы: generate, train, test, predict")
         sys.exit(1)
 
 if __name__ == "__main__":
