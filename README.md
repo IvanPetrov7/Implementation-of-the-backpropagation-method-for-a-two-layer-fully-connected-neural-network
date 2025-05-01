@@ -21,130 +21,187 @@ pip install -r requirements.txt
 
 ## Использование
 
-### Обучение модели (train.py)
+### Обучение модели 
 
 ```bash
-python train.py --data_path mnist_data \
-                --input_dim 784 \
-                --hidden_layers 1024 \
-                --output_dim 10 \
-                --learning_rate 0.1 \
-                --epochs 50 \
-                --weights_path model_weights.npz
+python lab1.py train mnist_images/training mnist_images/test 20 0.01
 ```
 
 Параметры:
 
-- `--data_path`: путь к директории с обучающими данными
-- `--input_dim`: размерность входных данных
-- `--hidden_layers`: размеры скрытых слоев
-- `--output_dim`: размерность выходного слоя
-- `--learning_rate`: скорость обучения
-- `--epochs`: количество эпох обучения
-- `--weights_path`: путь для сохранения весов модели
+- `train`: режим запуска
+- `mnist_images/training`: путь до обучающих данных
+- `mnist_images/test`: путь до тестовых данных
+- `20`: количество эпох обучения
+- `0.01`: скорость обучения
 
 Для текущих параметров вывод будет выглядеть примерно так:
 
 ```
-Number of training samples: 60000
-Training model...
-Epoch 1/50, Loss: 0.2301, Accuracy: 0.1003
-Epoch 2/50, Loss: 0.2257, Accuracy: 0.1988
-Epoch 3/50, Loss: 0.2214, Accuracy: 0.3018
-Epoch 4/50, Loss: 0.2173, Accuracy: 0.4317
-Epoch 5/50, Loss: 0.2133, Accuracy: 0.5405
-Epoch 6/50, Loss: 0.2093, Accuracy: 0.6126
-Epoch 7/50, Loss: 0.2053, Accuracy: 0.6544
-Epoch 8/50, Loss: 0.2012, Accuracy: 0.6809
-Epoch 9/50, Loss: 0.1972, Accuracy: 0.6995
-Epoch 10/50, Loss: 0.1931, Accuracy: 0.7136
-Epoch 11/50, Loss: 0.1889, Accuracy: 0.7253
-Epoch 12/50, Loss: 0.1847, Accuracy: 0.7337
-Epoch 13/50, Loss: 0.1804, Accuracy: 0.7406
-Epoch 14/50, Loss: 0.1762, Accuracy: 0.7477
-Epoch 15/50, Loss: 0.1719, Accuracy: 0.7534
-Epoch 16/50, Loss: 0.1676, Accuracy: 0.7588
-Epoch 17/50, Loss: 0.1634, Accuracy: 0.7635
-Epoch 18/50, Loss: 0.1591, Accuracy: 0.7683
-Epoch 19/50, Loss: 0.1550, Accuracy: 0.7722
-Epoch 20/50, Loss: 0.1508, Accuracy: 0.7760
-Epoch 21/50, Loss: 0.1468, Accuracy: 0.7798
-Epoch 22/50, Loss: 0.1428, Accuracy: 0.7840
-Epoch 23/50, Loss: 0.1390, Accuracy: 0.7870
-Epoch 24/50, Loss: 0.1352, Accuracy: 0.7907
-Epoch 25/50, Loss: 0.1316, Accuracy: 0.7941
-Epoch 26/50, Loss: 0.1281, Accuracy: 0.7971
-Epoch 27/50, Loss: 0.1248, Accuracy: 0.8003
-Epoch 28/50, Loss: 0.1215, Accuracy: 0.8028
-Epoch 29/50, Loss: 0.1184, Accuracy: 0.8053
-Epoch 30/50, Loss: 0.1155, Accuracy: 0.8077
-Epoch 31/50, Loss: 0.1127, Accuracy: 0.8103
-Epoch 32/50, Loss: 0.1099, Accuracy: 0.8127
-Epoch 33/50, Loss: 0.1074, Accuracy: 0.8149
-Epoch 34/50, Loss: 0.1049, Accuracy: 0.8172
-Epoch 35/50, Loss: 0.1026, Accuracy: 0.8193
-Epoch 36/50, Loss: 0.1004, Accuracy: 0.8209
-Epoch 37/50, Loss: 0.0982, Accuracy: 0.8230
-Epoch 38/50, Loss: 0.0962, Accuracy: 0.8249
-Epoch 39/50, Loss: 0.0943, Accuracy: 0.8270
-Epoch 40/50, Loss: 0.0925, Accuracy: 0.8286
-Epoch 41/50, Loss: 0.0907, Accuracy: 0.8302
-Epoch 42/50, Loss: 0.0890, Accuracy: 0.8316
-Epoch 43/50, Loss: 0.0875, Accuracy: 0.8333
-Epoch 44/50, Loss: 0.0859, Accuracy: 0.8346
-Epoch 45/50, Loss: 0.0845, Accuracy: 0.8358
-Epoch 46/50, Loss: 0.0831, Accuracy: 0.8373
-Epoch 47/50, Loss: 0.0818, Accuracy: 0.8383
-Epoch 48/50, Loss: 0.0805, Accuracy: 0.8399
-Epoch 49/50, Loss: 0.0793, Accuracy: 0.8411
-Epoch 50/50, Loss: 0.0782, Accuracy: 0.8422
-Training finished.
-Model weights saved to model_weights.npz
+Загрузка тренировочных данных...
+Загрузка тестовых данных...
+Начало обучения...
+
+Epoch 1/20
+Train Loss: 0.4591
+Accuracy: 0.8689, Precision: 0.8684, Recall: 0.8672, F1-Score: 0.8671
+
+Epoch 2/20
+Train Loss: 0.2019
+Accuracy: 0.9423, Precision: 0.9418, Recall: 0.9417, F1-Score: 0.9417
+
+Epoch 3/20
+Train Loss: 0.1492
+Accuracy: 0.9568, Precision: 0.9565, Recall: 0.9564, F1-Score: 0.9564
+
+Epoch 4/20
+Train Loss: 0.1180
+Accuracy: 0.9662, Precision: 0.9660, Recall: 0.9659, F1-Score: 0.9659
+
+Epoch 5/20
+Train Loss: 0.0974
+Accuracy: 0.9725, Precision: 0.9723, Recall: 0.9722, F1-Score: 0.9722
+
+Epoch 6/20
+Train Loss: 0.0821
+Accuracy: 0.9767, Precision: 0.9765, Recall: 0.9765, F1-Score: 0.9765
+
+Epoch 7/20
+Train Loss: 0.0690
+Accuracy: 0.9803, Precision: 0.9802, Recall: 0.9802, F1-Score: 0.9802
+
+Epoch 8/20
+Train Loss: 0.0604
+Accuracy: 0.9828, Precision: 0.9828, Recall: 0.9827, F1-Score: 0.9827
+
+Epoch 9/20
+Train Loss: 0.0531
+Accuracy: 0.9847, Precision: 0.9846, Recall: 0.9846, F1-Score: 0.9846
+
+Epoch 10/20
+Train Loss: 0.0468
+Accuracy: 0.9867, Precision: 0.9866, Recall: 0.9866, F1-Score: 0.9866
+
+Epoch 11/20
+Train Loss: 0.0409
+Accuracy: 0.9886, Precision: 0.9886, Recall: 0.9886, F1-Score: 0.9886
+
+Epoch 12/20
+Train Loss: 0.0361
+Accuracy: 0.9904, Precision: 0.9904, Recall: 0.9904, F1-Score: 0.9904
+
+Epoch 13/20
+Train Loss: 0.0319
+Accuracy: 0.9915, Precision: 0.9915, Recall: 0.9915, F1-Score: 0.9915
+
+Epoch 14/20
+Train Loss: 0.0284
+Accuracy: 0.9927, Precision: 0.9927, Recall: 0.9927, F1-Score: 0.9927
+
+Epoch 15/20
+Train Loss: 0.0244
+Accuracy: 0.9941, Precision: 0.9941, Recall: 0.9941, F1-Score: 0.9941
+
+Epoch 16/20
+Train Loss: 0.0217
+Accuracy: 0.9950, Precision: 0.9950, Recall: 0.9950, F1-Score: 0.9950
+
+Epoch 17/20
+Train Loss: 0.0195
+Accuracy: 0.9956, Precision: 0.9956, Recall: 0.9956, F1-Score: 0.9956
+
+Epoch 18/20
+Train Loss: 0.0175
+Accuracy: 0.9961, Precision: 0.9961, Recall: 0.9961, F1-Score: 0.9961
+
+Epoch 19/20
+Train Loss: 0.0152
+Accuracy: 0.9971, Precision: 0.9971, Recall: 0.9971, F1-Score: 0.9971
+
+Epoch 20/20
+Train Loss: 0.0133
+Accuracy: 0.9977, Precision: 0.9977, Recall: 0.9977, F1-Score: 0.9977
+
+Test Metrics:
+Accuracy: 0.9813, Precision: 0.9811, Recall: 0.9811, F1-Score: 0.9811
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.98      0.99      0.99       980
+           1       0.99      0.99      0.99      1135
+           2       0.98      0.98      0.98      1032
+           3       0.98      0.97      0.98      1010
+           4       0.98      0.98      0.98       982
+           5       0.97      0.98      0.98       892
+           6       0.99      0.98      0.98       958
+           7       0.98      0.98      0.98      1028
+           8       0.98      0.97      0.98       974
+           9       0.98      0.98      0.98      1009
+
+    accuracy                           0.98     10000
+   macro avg       0.98      0.98      0.98     10000
+weighted avg       0.98      0.98      0.98     10000
+
+Веса сохранены в weights.npz
 ```
 
-### Тестирование модели (test.py)
+### Тестирование модели 
 
 ```bash
-python test.py --data_path mnist_data \
-               --weights_path model_weights.npz
+python lab1.py test mnist_images/test weights.npz
 ```
 
 Параметры:
 
-- `--data_path`: путь к директории с тестовыми данными
-- `--weights_path`: путь к сохраненным весам модели
+- `test`: режим запуска
+- `mnist_images/test`: путь к директории с тестовыми данными
+- `weights.npz`: путь к сохраненным весам модели
 
 Для текущих параметров вывод будет выглядеть примерно так:
 
 ```
-Number of test samples: 10000
-Model weights loaded from model_weights.npz
-Testing model...
-Accuracy: 0.8541
-Precision: 0.8552
-Recall: 0.8507
-F1 Score: 0.8503
+Загрузка тестовых данных из mnist_images/test...
+
+Test Metrics:
+Accuracy: 0.9813, Precision: 0.9811, Recall: 0.9811, F1-Score: 0.9811
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.98      0.99      0.99       980
+           1       0.99      0.99      0.99      1135
+           2       0.98      0.98      0.98      1032
+           3       0.98      0.97      0.98      1010
+           4       0.98      0.98      0.98       982
+           5       0.97      0.98      0.98       892
+           6       0.99      0.98      0.98       958
+           7       0.98      0.98      0.98      1028
+           8       0.98      0.97      0.98       974
+           9       0.98      0.98      0.98      1009
+
+    accuracy                           0.98     10000
+   macro avg       0.98      0.98      0.98     10000
+weighted avg       0.98      0.98      0.98     10000
 ```
 
-### Предсказание на отдельном изображении (predict.py)
+### Предсказание на отдельном изображении 
 
 ```bash
-python predict.py --image_path path/to/image.png \
-                  --weights_path model_weights.npz
+python lab1.py predict mnist_images/test/0/img_3.png weights.npz
 ```
 
 Параметры:
 
-- `--image_path`: путь к изображению для классификации
-- `--weights_path`: путь к сохраненным весам модели
+- `predict`: режим запуска
+- `mnist_images/test/0/img_3.png`: путь к директории с тестовым изображением
+- `weights.npz`: путь к сохраненным весам модели
 
 Для текущих параметров вывод будет выглядеть примерно так:
 
 ```
-Model weights loaded from model_weights.npz
-Prediction for image: path/to/image.png
-Predicted class: 7
-Confidence: 0.8465
+Предсказание: Цифра — 0
+Confidence: 100.00%
 ```
 
 ## Требования к датасету
@@ -153,23 +210,33 @@ Confidence: 0.8465
 
 ```
 dataset/
-├── train/
-│   ├── images/    # Изображения для обучения
-│   └── labels/    # Метки для обучения
+├── training/
+│   ├── 0/    # Изображения 0 для обучения
+│   ├── 1/    # Изображения 1 для обучения
+│   ├── 2/    # Изображения 2 для обучения
+│   ├── 3/    # Изображения 3 для обучения
+│   ├── 4/    # Изображения 4 для обучения
+│   ├── 5/    # Изображения 5 для обучения
+│   ├── 6/    # Изображения 6 для обучения
+│   ├── 7/    # Изображения 7 для обучения
+│   ├── 8/    # Изображения 8 для обучения
+│   └── 9/    # Изображения 9 для обучения
 └── test/
-    ├── images/    # Изображения для тестирования
-    └── labels/    # Метки для тестирования
+    ├── 0/    # Изображения 0 для обучения
+    ├── 1/    # Изображения 1 для обучения
+    ├── 2/    # Изображения 2 для обучения
+    ├── 3/    # Изображения 3 для обучения
+    ├── 4/    # Изображения 4 для обучения
+    ├── 5/    # Изображения 5 для обучения
+    ├── 6/    # Изображения 6 для обучения
+    ├── 7/    # Изображения 7 для обучения
+    ├── 8/    # Изображения 8 для обучения
+    └── 9/    # Изображения 9 для обучения
 ```
 
 Требования к изображениям:
 
 - Формат: одноканальные изображения (оттенки серого)
-
-Требования к меткам:
-
-- Формат: текстовый файл с метками для каждого изображения
-
-### Генерация собственного датасета
 
 Для генерации собственного датасета используйте скрипт generate.py:
 
